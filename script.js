@@ -76,43 +76,43 @@ function handleCORSError() {
     "After granting access, please try converting again.";
 }
 
-function fetchTrackInfo(id) {
-  fetch(`https://open.spotify.com/oembed?url=https://open.spotify.com/track/${id}`)
-    .then((response) => response.json())
-    .then((data) => {
-      const title = data.title;
-      let trackTitle, artist;
+async function fetchTrackInfo(id) {
+  try {
+    // Fetch oembed data
+    const oembedResponse = await fetch(`${CORS_PROXY}https://open.spotify.com/oembed?url=https://open.spotify.com/track/${id}`);
+    const oembedData = await oembedResponse.json();
 
-      const byMatch = title.match(/(.*) by (.*)/);
-      if (byMatch) {
-        [, trackTitle, artist] = byMatch;
-      } else {
-        const featMatch = title.match(/(.*) \(feat\. (.*)\)/);
-        if (featMatch) {
-          [, trackTitle, artist] = featMatch;
-        } else {
-          trackTitle = title;
-          artist = null;
-        }
-      }
+    // Extract iframe URL
+    const iframeUrl = oembedData.iframe_url;
 
-      deezer
-        .searchSong(trackTitle, artist)
-        .then((song) => {
-          if (song) {
-            displayResult(song.link);
-          } else {
-            throw new Error("Track not found");
-          }
-        })
-        .catch((error) => {
-          if (error.message === "Network response was not ok") {
-            handleCORSError();
-          } else {
-            document.getElementById("result").textContent = "Track not found on Deezer.";
-          }
-        });
-    });
+    // Fetch iframe content
+    const iframeResponse = await fetch(CORS_PROXY + iframeUrl);
+    const iframeHtml = await iframeResponse.text();
+
+    // Parse the HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(iframeHtml, "text/html");
+
+    // Extract track and artist information
+    const trackTitle = doc.querySelector('.TitleAndSubtitle_title__Nwyku [data-encore-id="textLink"]').textContent;
+    const artist = doc.querySelector('.TitleAndSubtitle_subtitle__P1cxq [data-encore-id="textLink"]').textContent;
+
+    console.log(`Track: ${trackTitle}, Artist: ${artist}`);
+
+    // Search for the song on Deezer
+    const song = await deezer.searchSong(trackTitle, artist);
+    if (song) {
+      displayResult(song.link);
+    } else {
+      throw new Error("Track not found");
+    }
+  } catch (error) {
+    if (error.message === "Network response was not ok") {
+      handleCORSError();
+    } else {
+      document.getElementById("result").textContent = "Track not found on Deezer.";
+    }
+  }
 }
 
 function fetchArtistInfo(id) {
