@@ -1,37 +1,36 @@
 const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
 
 class DeezerSearch {
-  searchArtist(artist) {
-    return this.fetchWithProxy(`https://api.deezer.com/search/artist?order=RANKING&q=artist:"${artist}"`).then((response) => response.data[0]);
+  async searchArtist(artist) {
+    const response = await this.fetchWithProxy(`https://api.deezer.com/search/artist?order=RANKING&q=artist:"${artist}"`);
+    return response.data[0];
   }
 
-  searchAlbum(albumTitle, artist) {
-    return this.fetchWithProxy(`https://api.deezer.com/search/album?order=RANKING&q=artist:"${artist}" album:"${albumTitle}"`).then(
-      (response) => response.data[0]
-    );
+  async searchAlbum(albumTitle, artist) {
+    const response = await this.fetchWithProxy(`https://api.deezer.com/search/album?order=RANKING&q=artist:"${artist}" album:"${albumTitle}"`);
+    return response.data[0];
   }
 
-  searchSong(trackTitle, artist) {
+  async searchSong(trackTitle, artist) {
     let query = `track:"${trackTitle}"`;
     if (artist) {
       query += ` artist:"${artist}"`;
     }
-    return this.fetchWithProxy(`https://api.deezer.com/search/track?order=RANKING&q=${encodeURIComponent(query)}`).then(
-      (response) => response.data[0]
-    );
+    const response = await this.fetchWithProxy(`https://api.deezer.com/search/track?order=RANKING&q=${encodeURIComponent(query)}`);
+    return response.data[0];
   }
 
-  searchPlaylist(playlistName) {
-    return this.fetchWithProxy(`https://api.deezer.com/search/playlist?strict=on&q=${playlistName}`).then((response) => response.data[0]);
+  async searchPlaylist(playlistName) {
+    const response = await this.fetchWithProxy(`https://api.deezer.com/search/playlist?strict=on&q=${playlistName}`);
+    return response.data[0];
   }
 
-  fetchWithProxy(url) {
-    return fetch(CORS_PROXY + url).then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    });
+  async fetchWithProxy(url) {
+    const response = await fetch(CORS_PROXY + url);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
   }
 }
 
