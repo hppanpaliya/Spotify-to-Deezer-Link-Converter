@@ -1,0 +1,101 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  height: 40px;
+  margin: 0 10px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 20px;
+  background-color: #282828;
+  color: #ffffff;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #1db954;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1ed760;
+}
+
+#result {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.output-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#outputLink {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #282828;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+}
+
+#copyButton {
+  background-color: #3498db;
+  margin-top: 10px;
+}
+
+#copyButton:hover {
+  background-color: #2980b9;
+}
+
+@media (max-width: 600px) {
+  .logo {
+    height: 30px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
